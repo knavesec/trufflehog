@@ -68,7 +68,7 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 		foundUrls = append(foundUrls, match[1])
 	}
 
-	// add found + configured endpoints to the list
+	// add found + configured endpoints to the list (no URL in doc = self-hosted/custom URL coverage)
 	for _, endpoint := range s.Endpoints(foundUrls...) {
 		// if any configured endpoint has `https://` remove it because we append that during verification
 		endpoint = strings.TrimPrefix(endpoint, "https://")
@@ -76,6 +76,16 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 	}
 
 	for token := range uniqueTokens {
+		if len(uniqueUrls) == 0 {
+			// Emit token without URL for coverage (e.g. self-hosted Artifactory).
+			s1 := detectors.Result{
+				DetectorType: detectorspb.DetectorType_ArtifactoryAccessToken,
+				Raw:          []byte(token),
+				RawV2:        []byte(token),
+			}
+			results = append(results, s1)
+			continue
+		}
 		for url := range uniqueUrls {
 			if invalidHosts.Exists(url) {
 				delete(uniqueUrls, url)

@@ -857,6 +857,46 @@ import (
 	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/zohocrm"
 	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/zonkafeedback"
 	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/zulipchat"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/age"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/ansiblevault"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/awsaccountid"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/awsappsync"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/awsmws"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/blynktoken"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/cratesio"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/curlbasicauth"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/custom_example"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/custom_rule_template"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/dependencytrack"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/djangosecretkey"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/dynatracetoken"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/firecrawl"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/gitalk"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/gradlecredentials"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/httpbasicauth"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/httpbearer"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/jenkinstoken"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/jina"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/kagi"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/kubernetesbootstrap"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/linkedinsecret"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/netrccreds"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/npmrcauth"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/npmrcpassword"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/odbcconnection"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/pak"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/particleio"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/phpmailer"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/psexeccreds"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/reactappenv"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/sshpass"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/stackhawk"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/tavily"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/teamcitytoken"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/thingsboard"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/truenastoken"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/vmwareviserver"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/wireguardkey"
 	"github.com/trufflesecurity/trufflehog/v3/pkg/pb/detectorspb"
 )
 
@@ -1747,6 +1787,47 @@ func buildDetectorList() []detectors.Detector {
 		&zohocrm.Scanner{},
 		&zonkafeedback.Scanner{},
 		&zulipchat.Scanner{},
+		// Custom rules (verification not implemented; no _test.go / _integration_test.go)
+		&age.Scanner{},
+		&ansiblevault.Scanner{},
+		&awsaccountid.Scanner{},
+		&awsappsync.Scanner{},
+		&awsmws.Scanner{},
+		&blynktoken.Scanner{},
+		&cratesio.Scanner{},
+		&curlbasicauth.Scanner{},
+		&custom_example.Scanner{},
+		&custom_rule_template.Scanner{},
+		&dependencytrack.Scanner{},
+		&djangosecretkey.Scanner{},
+		&dynatracetoken.Scanner{},
+		&firecrawl.Scanner{},
+		&gitalk.Scanner{},
+		&gradlecredentials.Scanner{},
+		&httpbasicauth.Scanner{},
+		&httpbearer.Scanner{},
+		&jenkinstoken.Scanner{},
+		&jina.Scanner{},
+		&kagi.Scanner{},
+		&kubernetesbootstrap.Scanner{},
+		&linkedinsecret.Scanner{},
+		&netrccreds.Scanner{},
+		&npmrcauth.Scanner{},
+		&npmrcpassword.Scanner{},
+		&odbcconnection.Scanner{},
+		&pak.Scanner{},
+		&particleio.Scanner{},
+		&phpmailer.Scanner{},
+		&psexeccreds.Scanner{},
+		&reactappenv.Scanner{},
+		&sshpass.Scanner{},
+		&stackhawk.Scanner{},
+		&tavily.Scanner{},
+		&teamcitytoken.Scanner{},
+		&thingsboard.Scanner{},
+		&truenastoken.Scanner{},
+		&vmwareviserver.Scanner{},
+		&wireguardkey.Scanner{},
 	}
 }
 

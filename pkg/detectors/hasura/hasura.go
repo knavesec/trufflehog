@@ -58,9 +58,17 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 		uniqueDomainMatches[match[1]] = struct{}{}
 	}
 
-	// Logic: For each key, try to verify against each found domain.
-	// Stop and record a verified finding on the first successful match.
+	// Emit results for each key; domain is optional (e.g. self-hosted/custom domain).
 	for key := range uniqueKeyMatches {
+		if len(uniqueDomainMatches) == 0 {
+			s1 := detectors.Result{
+				DetectorType: detectorspb.DetectorType_Hasura,
+				Raw:          []byte(key),
+				RawV2:        []byte(key),
+			}
+			results = append(results, s1)
+			continue
+		}
 		for domain := range uniqueDomainMatches {
 			s1 := detectors.Result{
 				DetectorType: detectorspb.DetectorType_Hasura,
@@ -76,7 +84,6 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 			}
 
 			results = append(results, s1)
-			// If we successfully verified this key with a domain, we don't need to check it against other domains.
 			if s1.Verified {
 				break
 			}

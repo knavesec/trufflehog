@@ -56,6 +56,19 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 
 	for key := range keyMatches {
 		for id := range idMatches {
+			if len(domainMatches) == 0 {
+				// Emit result without domain (e.g. self-hosted/custom domain) for coverage.
+				s1 := detectors.Result{
+					DetectorType: detectorspb.DetectorType_ZulipChat,
+					Raw:          []byte(key),
+					RawV2:        []byte(fmt.Sprintf("%s:%s", key, id)),
+					ExtraData: map[string]string{
+						"Id": id,
+					},
+				}
+				results = append(results, s1)
+				continue
+			}
 			for domain := range domainMatches {
 				s1 := detectors.Result{
 					DetectorType: detectorspb.DetectorType_ZulipChat,

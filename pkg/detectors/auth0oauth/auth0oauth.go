@@ -54,6 +54,17 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 
 	for clientIdRes := range uniqueClientIDs {
 		for clientSecretRes := range uniqueSecrets {
+			if len(uniqueDomainMatches) == 0 {
+				// Emit without domain (e.g. Auth0 custom domain) for coverage.
+				s1 := detectors.Result{
+					DetectorType: detectorspb.DetectorType_Auth0oauth,
+					Redacted:     clientIdRes,
+					Raw:          []byte(clientSecretRes),
+					RawV2:        []byte(clientIdRes + clientSecretRes),
+				}
+				results = append(results, s1)
+				continue
+			}
 			for domainRes := range uniqueDomainMatches {
 				s1 := detectors.Result{
 					DetectorType: detectorspb.DetectorType_Auth0oauth,
@@ -63,7 +74,6 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 				}
 
 				if verify {
-
 					client := s.client
 					if client == nil {
 						client = defaultClient

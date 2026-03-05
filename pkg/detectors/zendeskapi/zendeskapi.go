@@ -53,6 +53,16 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 
 	for token := range uniqueTokens {
 		for email := range uniqueEmails {
+			if len(uniqueDomains) == 0 {
+				// Emit token+email without domain (e.g. custom Zendesk host) for coverage.
+				s1 := detectors.Result{
+					DetectorType: detectorspb.DetectorType_ZendeskApi,
+					Raw:          []byte(token),
+					ExtraData:    map[string]string{"email": email},
+				}
+				results = append(results, s1)
+				continue
+			}
 			for domain := range uniqueDomains {
 				s1 := detectors.Result{
 					DetectorType: detectorspb.DetectorType_ZendeskApi,
@@ -66,10 +76,8 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 				}
 
 				results = append(results, s1)
-
 			}
 		}
-
 	}
 
 	return results, nil

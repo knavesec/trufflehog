@@ -49,6 +49,16 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 	}
 
 	for token := range uniqueTokens {
+		if len(uniqueDomains) == 0 {
+			// Emit token without domain (e.g. custom Okta domain) for coverage.
+			s1 := detectors.Result{
+				DetectorType: detectorspb.DetectorType_Okta,
+				Raw:          []byte(token),
+				RawV2:        []byte(token),
+			}
+			results = append(results, s1)
+			continue
+		}
 		for domain := range uniqueDomains {
 			s1 := detectors.Result{
 				DetectorType: detectorspb.DetectorType_Okta,

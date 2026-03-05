@@ -43,6 +43,17 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 	for _, match := range keyMatches {
 		key := strings.TrimSpace(match[1])
 
+		if len(domainMatches) == 0 {
+			// Emit result without domain (e.g. self-hosted Grafana) for coverage.
+			s1 := detectors.Result{
+				DetectorType: detectorspb.DetectorType_GrafanaServiceAccount,
+				Raw:          []byte(key),
+				RawV2:        []byte(key),
+			}
+			results = append(results, s1)
+			continue
+		}
+
 		for _, domainMatch := range domainMatches {
 			domainRes := strings.TrimSpace(domainMatch[1])
 

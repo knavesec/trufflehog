@@ -61,12 +61,25 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 		uniqueVaultUrls[url] = struct{}{}
 	}
 
-	// If no names or secrets found, return empty results
-	if len(uniqueRoleIds) == 0 || len(uniqueSecretIds) == 0 || len(uniqueVaultUrls) == 0 {
+	if len(uniqueRoleIds) == 0 || len(uniqueSecretIds) == 0 {
 		return results, nil
 	}
 
-	// create combination results that can be verified
+	// Emit results for role_id + secret_id even when no vault URL found (e.g. self-hosted/custom URL).
+	if len(uniqueVaultUrls) == 0 {
+		for roleId := range uniqueRoleIds {
+			for secretId := range uniqueSecretIds {
+				s1 := detectors.Result{
+					DetectorType: detectorspb.DetectorType_HashiCorpVaultAuth,
+					Raw:          []byte(secretId),
+					RawV2:        []byte(fmt.Sprintf("%s:%s", roleId, secretId)),
+				}
+				results = append(results, s1)
+			}
+		}
+		return results, nil
+	}
+
 	for roleId := range uniqueRoleIds {
 		for secretId := range uniqueSecretIds {
 			for vaultUrl := range uniqueVaultUrls {

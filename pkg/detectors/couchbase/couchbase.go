@@ -22,10 +22,12 @@ type Scanner struct {
 var _ detectors.Detector = (*Scanner)(nil)
 
 var (
-	// Make sure that your group is surrounded in boundary characters such as below to reduce false positives.
+	// Cloud Capella host only
 	connectionStringPat = regexp.MustCompile(`\b(cb\.[a-z0-9]+\.cloud\.couchbase\.com)\b`)
-	usernamePat         = common.UsernameRegexCheck(`?()/\+=\s\n`)
-	passwordPat         = common.PasswordRegexCheck(`^<>;.*&|£\n\s`)
+	// Self-hosted or any host: couchbase:// or couchbases://host[:port]
+	connectionStringPatGeneric = regexp.MustCompile(`\b(couchbases?://[a-zA-Z0-9._-]+(?::\d+)?)\b`)
+	usernamePat                = common.UsernameRegexCheck(`?()/\+=\s\n`)
+	passwordPat                = common.PasswordRegexCheck(`^<>;.*&|£\n\s`)
 )
 
 func (s Scanner) Type() detectorspb.DetectorType {
@@ -50,6 +52,9 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 
 	for _, match := range connectionStringPat.FindAllStringSubmatch(dataStr, -1) {
 		uniqueConnStrings["couchbases://"+match[1]] = struct{}{}
+	}
+	for _, match := range connectionStringPatGeneric.FindAllStringSubmatch(dataStr, -1) {
+		uniqueConnStrings[match[1]] = struct{}{}
 	}
 
 	for _, match := range usernamePat.Matches(data) {

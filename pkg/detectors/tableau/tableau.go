@@ -70,19 +70,27 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 		return results, nil
 	}
 
-	// Use maps to deduplicate endpoints
+	// Use maps to deduplicate endpoints (no URL in doc = self-hosted Tableau Server coverage)
 	var uniqueEndpoints = make(map[string]struct{})
 
-	// Add endpoints to the list
 	for _, endpoint := range s.Endpoints(foundURLs...) {
-		// Remove https:// prefix if present since we add it during verification
 		endpoint = strings.TrimPrefix(endpoint, "https://")
 		uniqueEndpoints[endpoint] = struct{}{}
 	}
 
-	// Process each combination of token name, token secret, and endpoint
 	for _, tokenName := range tokenNames {
 		for _, tokenSecret := range tokenSecrets {
+			if len(uniqueEndpoints) == 0 {
+				// Emit PAT without endpoint for coverage (e.g. on-prem Tableau Server).
+				result := detectors.Result{
+					DetectorType: detectorspb.DetectorType_TableauPersonalAccessToken,
+					Raw:          []byte(tokenName),
+					RawV2:        []byte(fmt.Sprintf("%s:%s", tokenName, tokenSecret)),
+					ExtraData:    make(map[string]string),
+				}
+				results = append(results, result)
+				continue
+			}
 			for endpoint := range uniqueEndpoints {
 				result := detectors.Result{
 					DetectorType: detectorspb.DetectorType_TableauPersonalAccessToken,

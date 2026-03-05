@@ -51,6 +51,17 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 			continue
 		}
 
+		if len(domainMatches) == 0 {
+			// Emit without domain (e.g. Auth0 custom domain) for coverage.
+			s1 := detectors.Result{
+				DetectorType: detectorspb.DetectorType_Auth0ManagementApiToken,
+				Raw:          []byte(managementAPITokenRes),
+				RawV2:        []byte(managementAPITokenRes),
+			}
+			results = append(results, s1)
+			continue
+		}
+
 		for _, domainMatch := range domainMatches {
 			domainRes := strings.TrimSpace(domainMatch[1])
 

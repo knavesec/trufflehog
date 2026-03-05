@@ -47,6 +47,16 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 		clientIDRes := strings.TrimSpace(clientIdMatch[1])
 		for _, clientSecretMatch := range clientSecretMatches {
 			clientSecretRes := strings.TrimSpace(clientSecretMatch[1])
+			if len(domainMatches) == 0 {
+				// Emit without domain (e.g. self-hosted OpenVPN Access Server) for coverage.
+				s1 := detectors.Result{
+					DetectorType: detectorspb.DetectorType_OpenVpn,
+					Raw:          []byte(clientSecretRes),
+					RawV2:        []byte(clientIDRes + clientSecretRes),
+				}
+				results = append(results, s1)
+				continue
+			}
 			for _, domainMatch := range domainMatches {
 				domainRes := strings.TrimSpace(domainMatch[1])
 
@@ -63,8 +73,6 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 					}
 
 					payload := strings.NewReader("grant_type=client_credentials")
-					// OpenVPN API is in beta, We'll have to update the API endpoint once
-					// Docs: https://openvpn.net/cloud-docs/developer/creating-api-credentials.html
 					req, err := http.NewRequestWithContext(ctx, "POST", domainRes+"/api/beta/oauth/token", payload)
 					if err != nil {
 						continue
@@ -94,7 +102,6 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 				results = append(results, s1)
 			}
 		}
-
 	}
 
 	return results, nil

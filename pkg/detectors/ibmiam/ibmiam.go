@@ -22,7 +22,7 @@ var _ detectors.Detector = (*Scanner)(nil)
 var (
 	defaultClient = common.SaneHttpClient()
 	// Same character class as Box (alphanumeric), length 44 for IBM IAM API keys.
-	keyPat = regexp.MustCompile(`\b([0-9a-zA-Z]{44})\b`)
+	keyPat = regexp.MustCompile(`\b([0-9a-zA-Z_\-]{44})\b`)
 )
 
 // Keywords are used for efficiently pre-filtering chunks. IBM IAM API keys have no

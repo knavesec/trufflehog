@@ -75,6 +75,16 @@ func (s Scanner) FromData(ctx context.Context, verify bool, data []byte) (result
 	}
 
 	for token := range uniqueTokens {
+		if len(uniqueUrls) == 0 {
+			// Emit token without URL for coverage (e.g. self-hosted Artifactory).
+			s1 := detectors.Result{
+				DetectorType: detectorspb.DetectorType_ArtifactoryReferenceToken,
+				Raw:          []byte(token),
+				RawV2:        []byte(token),
+			}
+			results = append(results, s1)
+			continue
+		}
 		for url := range uniqueUrls {
 			if invalidHosts.Exists(url) {
 				continue

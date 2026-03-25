@@ -377,6 +377,7 @@ import (
 	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/iconfinder"
 	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/iexapis"
 	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/iexcloud"
+	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/ibmiam"
 	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/imagekit"
 	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/imagga"
 	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors/impala"
@@ -1293,6 +1294,7 @@ func buildDetectorList() []detectors.Detector {
 		&iconfinder.Scanner{},
 		&iexapis.Scanner{},
 		&iexcloud.Scanner{},
+		&ibmiam.Scanner{},
 		&imagekit.Scanner{},
 		&imagga.Scanner{},
 		&impala.Scanner{},
